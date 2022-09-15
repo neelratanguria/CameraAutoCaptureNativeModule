@@ -29,16 +29,6 @@ import java.util.TreeMap;
 
 public class MainActivity extends ReactActivity implements PictureCapturingListener, ActivityCompat.OnRequestPermissionsResultCallback{
 
-  private static final String[] requiredPermissions = {
-          Manifest.permission.WRITE_EXTERNAL_STORAGE,
-          Manifest.permission.CAMERA,
-  };
-
-  private ImageView uploadBackPhoto;
-  private ImageView uploadFrontPhoto;
-  private APictureCapturingService pictureService;
-
-  private static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
 
   @Override
   protected String getMainComponentName() {
@@ -50,38 +40,38 @@ public class MainActivity extends ReactActivity implements PictureCapturingListe
     return new MainActivityDelegate(this, getMainComponentName());
   }
 
-  private void showToast(final String text) {
-    runOnUiThread(() ->
-            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show()
-    );
-  }
+  private static final String[] requiredPermissions = {
+          Manifest.permission.WRITE_EXTERNAL_STORAGE,
+          Manifest.permission.CAMERA,
+  };
+  private static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
 
   @Override
   public void onDoneCapturingAllPhotos(TreeMap<String, byte[]> picturesTaken) {
-    if (picturesTaken != null && !picturesTaken.isEmpty()) {
-      showToast("Done capturing all photos!");
-      return;
-    }
-    Log.v("Picture",picturesTaken.toString());
-    showToast("No camera detected!");
+//    if (picturesTaken != null && !picturesTaken.isEmpty()) {
+//      //showToast("Done capturing all photos!");
+//      return;
+//    }
+//    Log.v("Picture",picturesTaken.toString());
+//    //showToast("No camera detected!");
   }
 
   @Override
   public void onCaptureDone(String pictureUrl, byte[] pictureData) {
-    if (pictureData != null && pictureUrl != null) {
-      runOnUiThread(() -> {
-        final Bitmap bitmap = BitmapFactory.decodeByteArray(pictureData, 0, pictureData.length);
-        final int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
-        final Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
-        if (pictureUrl.contains("0_pic.jpg")) {
-//          uploadBackPhoto.setImageBitmap(scaled);
-        } else if (pictureUrl.contains("1_pic.jpg")) {
-//          uploadFrontPhoto.setImageBitmap(scaled);
-        }
-      });
-      showToast("Picture saved to " + pictureUrl);
-      Log.d("Picture saved to " , pictureUrl);
-    }
+//    if (pictureData != null && pictureUrl != null) {
+//      runOnUiThread(() -> {
+//        final Bitmap bitmap = BitmapFactory.decodeByteArray(pictureData, 0, pictureData.length);
+//        final int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
+//        final Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+//        if (pictureUrl.contains("0_pic.jpg")) {
+////          uploadBackPhoto.setImageBitmap(scaled);
+//        } else if (pictureUrl.contains("1_pic.jpg")) {
+////          uploadFrontPhoto.setImageBitmap(scaled);
+//        }
+//      });
+//      //showToast("Picture saved to " + pictureUrl);
+//      Log.d("Picture saved to " , pictureUrl);
+//    }
   }
 
   @Override
@@ -118,17 +108,7 @@ public class MainActivity extends ReactActivity implements PictureCapturingListe
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Log.d("Aditya", "Inside OnCreate");
-//    setContentView(R.layout.activity_main);
     checkPermissions();
-//    uploadBackPhoto = (ImageView) findViewById(R.id.backIV);
-//    uploadFrontPhoto = (ImageView) findViewById(R.id.frontIV);
-//    final Button btn = (Button) findViewById(R.id.startCaptureBtn);
-    pictureService = PictureCapturingServiceImpl.getInstance(this);
-//    btn.setOnClickListener(v -> {
-      showToast("Starting capture!");
-    Log.d("Aditya", "Starting capture!");
-      pictureService.startCapturing(this);
-//    });
   }
   public static class MainActivityDelegate extends ReactActivityDelegate {
     public MainActivityDelegate(ReactActivity activity, String mainComponentName) {

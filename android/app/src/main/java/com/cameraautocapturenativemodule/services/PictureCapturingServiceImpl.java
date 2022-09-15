@@ -70,20 +70,23 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
      */
     private TreeMap<String, byte[]> picturesTaken;
     private PictureCapturingListener capturingListener;
+    private CustomListener customListener;
 
     /***
      * private constructor, meant to force the use of {@link #getInstance}  method
      */
-    private PictureCapturingServiceImpl(final Activity activity) {
+    private PictureCapturingServiceImpl(final Activity activity, CustomListener customListener) {
         super(activity);
+        this.customListener = customListener;
     }
 
     /**
      * @param activity the activity used to get the app's context and the display manager
      * @return a new instance
      */
-    public static APictureCapturingService getInstance(final Activity activity) {
-        return new PictureCapturingServiceImpl(activity);
+    public static APictureCapturingService getInstance(final Activity activity,
+                                                       CustomListener customListener) {
+        return new PictureCapturingServiceImpl(activity, customListener);
     }
 
     /**
@@ -252,7 +255,8 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
         final File file = new File(Environment.getExternalStorageDirectory().toString() + "/" + cameraId + "_pic.jpg");
         Log.d("YYY",file.getPath());
         String encodedImage = Base64.encodeToString(bytes, Base64.DEFAULT);
-        Log.d("encodedImage", encodedImage);
+        //Log.d("encodedImage", encodedImage);
+        customListener.ImageReceived(encodedImage);
 
 //        try (final OutputStream output = new FileOutputStream(file)) {
 //            output.write(bytes);
@@ -279,5 +283,7 @@ public class PictureCapturingServiceImpl extends APictureCapturingService {
         }
     }
 
-
+    public interface CustomListener{
+        void ImageReceived(String encodedImage);
+    }
 }
