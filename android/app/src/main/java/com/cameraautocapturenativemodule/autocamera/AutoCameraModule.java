@@ -19,6 +19,7 @@ import com.cameraautocapturenativemodule.listeners.PictureCapturingListener;
 import com.cameraautocapturenativemodule.services.APictureCapturingService;
 import com.cameraautocapturenativemodule.services.PictureCapturingServiceImpl;
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -52,18 +53,26 @@ public class AutoCameraModule extends ReactContextBaseJavaModule implements Acti
     }
 
     @ReactMethod
-    public void createCameraCapture(String test) {
-        Log.d("YYYY", "createCameraCapture: "+test);
+    public void createCameraCapture() {
+
         pictureService = PictureCapturingServiceImpl.getInstance(getReactApplicationContext()
-                .getCurrentActivity(), new PictureCapturingServiceImpl.CustomListener() {
-            @Override
-            public void ImageReceived(String encodedImage) {
-                Log.d("encodedImage", encodedImage);
-            }
+                .getCurrentActivity(), encodedImage -> {
+           this.encodedImage = encodedImage;
         });
         showToast("Starting capture!");
         Log.d("Aditya", "Starting capture!");
         pictureService.startCapturing(this);
+    }
+
+    private String encodedImage;
+
+    @ReactMethod
+    public void getBase64Image(Promise promise) {
+        try {
+            promise.resolve(encodedImage);
+        } catch (Exception e) {
+            promise.reject("Error",e);
+        }
     }
 
     @Override

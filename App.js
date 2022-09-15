@@ -66,6 +66,9 @@ const App: () => Node = () => {
 
   AutoCamera.createCameraCapture("This is a test string")
 
+  // UNCOMMENT TO USE with delay
+  // const encodeImage = await AutoCamera.getBase64Image();
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
